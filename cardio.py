@@ -121,8 +121,8 @@ with st.form("cardio_prediction_form"):
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.subheader("Datos Demográficos")
-        edad_years = st.slider("Edad", 18, 100, 50,)
+        st.subheader("Datos Personales")
+        edad_years = st.number_input("Edad", min_value=18, max_value=100, value=50,step=1)
         edad_model_input = edad_years 
 
         genero_display = st.radio("Sexo", options=["Femenino", "Masculino"], index=0,horizontal=True)
