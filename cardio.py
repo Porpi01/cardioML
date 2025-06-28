@@ -4,14 +4,11 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 
-# ---Configuración Inicial de la Página ---
 st.set_page_config(
     page_title="Monitor de Salud Cardiovascular",
     layout="wide", 
     initial_sidebar_state="expanded"
 )
-
-# --- 1. Estilos CSS Personalizados para un Diseño Moderno y Profesional ---
 
 st.markdown("""
 <style>
@@ -81,8 +78,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ---Cargar modelo ---
-
 @st.cache_resource
 def load_assets():
     model_loaded = None
@@ -103,7 +98,6 @@ def load_assets():
     
     return model_loaded, scaler_loaded
 
-# Cargar los recursos al inicio de la aplicación
 model, scaler = load_assets()
 
 
@@ -168,8 +162,6 @@ with st.form("cardio_prediction_form"):
 
     submitted = st.form_submit_button("Calcular")
 
-    # --- Lógica de Predicción  ---
-# --- Lógica de Predicción y Visualización ---
 if submitted:
     if model is not None:
         bmi = 0.0
@@ -191,11 +183,8 @@ if submitted:
             }
 
             input_df = pd.DataFrame([user_data_raw], columns=FEATURE_COLUMNS_ORDER)
-
-            # Escalar los datos
             processed_input = scaler.transform(input_df) if scaler else input_df.values
 
-            # Predicción
             try:
                 prediccion_clase = model.predict(processed_input)[0]
                 probabilidad_enfermedad = model.predict_proba(processed_input)[:, 1][0]
@@ -203,20 +192,16 @@ if submitted:
                 st.error(f"Error al realizar la predicción. Detalle: {e}")
                 st.stop()
 
-            # --- Mostrar resultados según rangos personalizados ---
             umbral_decision = 0.5
             umbral_moderado_inferior = 0.35
             umbral_moderado_superior = 0.65
 
             if probabilidad_enfermedad >= umbral_moderado_superior:
-                # Riesgo Alto
+               
                 st.markdown(f""" 
                 <div class="result-title-main risk-high-color"> 
                     ¡ALERTA! Tu riesgo es ALTO. 
                 </div> 
-                <p style="text-align: center; font-size:1.1em; color: #dc3545;"> 
-                    La probabilidad estimada de riesgo es del <b>{probabilidad_enfermedad:.2%}</b>. 
-                </p> 
                 """, unsafe_allow_html=True)
 
                 st.markdown(""" 
@@ -237,9 +222,7 @@ if submitted:
                 <div class="result-title-main" style="color:#FF8C00;"> 
                     Riesgo moderado 
                 </div> 
-                <p style="text-align: center; font-size:1.1em; color: #FF8C00;"> 
-                    La probabilidad estimada de riesgo es del <b>{probabilidad_enfermedad:.2%}</b>. 
-                </p> 
+            
                 """, unsafe_allow_html=True)
 
                 st.markdown(""" 
@@ -260,9 +243,7 @@ if submitted:
                 <div class="result-title-main risk-low-color"> 
                     ¡Tu riesgo es bajo! 
                 </div> 
-                <p style="text-align: center; font-size:1.1em; color: #28a745;"> 
-                    La probabilidad estimada de riesgo es del <b>{probabilidad_enfermedad:.2%}</b>. 
-                </p> 
+            
                 """, unsafe_allow_html=True)
 
                 st.markdown(""" 
